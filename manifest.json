@@ -1,0 +1,18 @@
+{
+	"manifest_version": 3,
+	"description": "远程控制 Chrome 标签页切换、刷新等",
+	"name": "Remote Tab Controller(标签页快捷控制)",
+	"version": "1.0",
+	"permissions": [
+		"tabs"
+	],
+	"background": {
+		"service_worker": "background.js"
+	},
+	"icons": {
+		"16": "icon/Remote.png",
+		"32": "icon/Remote.png",
+		"48": "icon/Remote.png",
+		"128": "icon/Remote.png"
+	}
+}
