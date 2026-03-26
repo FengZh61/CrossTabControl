@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Chrome 标签页快捷控制</title>
+  <style>
+    body { 
+      font-family: "Segoe UI", Arial, sans-serif; 
+	  padding: 5vw; /* 使用相对单位 */
+	  background: #f8f9fa;
+	  max-width: 1000px; /* 可适当放宽 */
+	  margin: 0 auto;
+	  box-sizing: border-box; /* 包括 padding */
+    }
+    h2 { margin-bottom: 15px; color: #202124; }
+    h3 { 
+      margin: 25px 0 12px 0; 
+      color: #5f6368; 
+      font-size: 1.1em;
+      border-bottom: 1px solid #dadce0;
+      padding-bottom: 8px;
+    }
+
+    .nav-buttons button { 
+      padding: 12px 20px; 
+      font-size: 16px; 
+      margin-right: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+	/* 下一页签 - 改成橙色（你可以在这里改颜色） */
+    .next-btn {
+      background: #fbbc05;     /* ← 这里改颜色 */
+      color: #202124;
+    }
+    .next-btn:hover {
+      background: #f9ab00;     /* 鼠标悬停时的颜色 */
+    }
+
+    .prev-btn {
+      background: #34a853; 
+      color: white;
+    }
+    .prev-btn:hover {
+      background: #2d8f46;
+    }
+    .refresh-btn {
+      background: #ea4335; 
+      color: white;
+    }
+    .refresh-btn:hover { background: #d93025; }
+
+    /* 位置切换按钮优化 */
+    .position-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .pos-btn { 
+      background: #8e44ad; 
+      color: white; 
+      border: none;
+      padding: 1em;
+      font-size: 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      min-width: 80px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .pos-btn:hover { 
+      background: #7d3c98; 
+      transform: translateY(-2px);
+    }
+
+    .tab-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .tab-btn { 
+      background: #1a73e8; 
+      color: white; 
+      border: none;
+      padding: 1em;
+      font-size: 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      min-width: 130px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover { 
+      background: #185abc; 
+      transform: translateY(-2px);
+    }
+
+    .custom-area {
+      margin-top: 30px;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    .custom-input {
+      padding: 14px;
+      width: 60%;
+      font-size: 16px;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+    }
+
+    .status {
+      margin-top: 15px;
+      font-size: 14px;
+      min-height: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Chrome 标签页快捷控制</h2>
+
+  <!-- 导航 + 刷新按钮 -->
+  <div class="nav-buttons">
+    <button class="next-btn" onclick="send('prevTab')">⏪上一页签</button>
+    <button class="prev-btn" onclick="send('nextTab')">下一页签⏩</button>  
+    <button class="refresh-btn" onclick="refreshTab()">🔄 刷新当前页签</button>
+  </div>
+
+  
+
+  <!-- 保留原来的标题切换按钮 -->
+  <h3>按标题快速切换</h3>
+  <div class="tab-grid">
+    <button class="tab-btn" onclick="gotoByTitle('YouTube')">YouTube</button>
+    <button class="tab-btn" onclick="gotoByTitle('GitHub')">GitHub</button>
+    <button class="tab-btn" onclick="gotoByTitle('Gmail')">Gmail</button>
+    <button class="tab-btn" onclick="gotoByTitle('ChatGPT')">ChatGPT</button>
+    <button class="tab-btn" onclick="gotoByTitle('Google')">Google</button>
+    <button class="tab-btn" onclick="gotoByTitle('Twitter')">X (Twitter)</button>
+  </div>
+
+  <div class="tab-grid">
+    <button class="tab-btn" onclick="gotoByTitle('Notion')">Notion</button>
+    <button class="tab-btn" onclick="gotoByTitle('Bilibili')">哔哩哔哩</button>
+    <button class="tab-btn" onclick="gotoByTitle('淘宝')">淘宝</button>
+    <button class="tab-btn" onclick="gotoByTitle('PChome')">PChome</button>
+  </div>
+<!-- 新增：切换指定位置 -->
+  <h3>切换到指定位置的页签</h3>
+  <div class="position-grid">
+    <button class="pos-btn" onclick="gotoPosition(0)">第 1 位</button>
+    <button class="pos-btn" onclick="gotoPosition(1)">第 2 位</button>
+    <button class="pos-btn" onclick="gotoPosition(2)">第 3 位</button>
+    <button class="pos-btn" onclick="gotoPosition(3)">第 4 位</button>
+    <button class="pos-btn" onclick="gotoPosition(4)">第 5 位</button>
+    <button class="pos-btn" onclick="gotoPosition(5)">第 6 位</button>
+    <button class="pos-btn" onclick="gotoPosition(6)">第 7 位</button>
+    <button class="pos-btn" onclick="gotoPosition(7)">第 8 位</button>
+    <button class="pos-btn" onclick="gotoPosition(8)">第 9 位</button>
+    <button class="pos-btn" onclick="gotoPosition(9)">第10 位</button>
+  </div>
+  <!-- 自定义输入 -->
+  <div class="custom-area">
+    <h3>自定义切换</h3>
+    <input type="text" id="titleInput" class="custom-input" 
+           placeholder="输入页签标题关键词..." />
+    <button class="tab-btn" style="margin-left:10px; padding:14px 24px;" onclick="gotoByTitleFromInput()">切换</button>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <script>
+    const ws = new WebSocket("ws://localhost:3000");
+
+    ws.onopen = () => showStatus("✅ 已连接到服务器", "green");
+    ws.onclose = () => {
+      showStatus("❌ 连接断开，3秒后重连...", "red");
+      setTimeout(() => location.reload(), 3000);
+    };
+
+    function send(action) {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ action }));
+        console.log("发送:", action);
+      } else {
+        showStatus("WebSocket 未连接", "red");
+      }
+    }
+
+    // 新增：切换到指定位置（索引从0开始）
+    function gotoPosition(index) {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ 
+          action: "gotoTab", 
+          index: index 
+        }));
+        showStatus(`切换到第 ${index + 1} 个页签`, "blue");
+      } else {
+        showStatus("WebSocket 未连接", "red");
+      }
+    }
+
+    function refreshTab() {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ action: "refreshTab" }));
+        showStatus("🔄 正在刷新当前页签...", "blue");
+      } else {
+        showStatus("WebSocket 未连接", "red");
+      }
+    }
+
+    function gotoByTitle(title) {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ action: "gotoTabByTitle", title: title }));
+        showStatus(`正在切换 → ${title}`, "blue");
+      } else {
+        showStatus("WebSocket 未连接", "red");
+      }
+    }
+
+    function gotoByTitleFromInput() {
+      const input = document.getElementById("titleInput");
+      const title = input.value.trim();
+      if (!title) {
+        showStatus("请输入页签标题关键词", "red");
+        return;
+      }
+      gotoByTitle(title);
+    }
+
+    function showStatus(text, colorClass) {
+      const statusEl = document.getElementById("status");
+      const colors = { green: "#137333", red: "#c5221f", blue: "#1a73e8" };
+      statusEl.innerHTML = `<span style="color: ${colors[colorClass] || '#202124'}">${text}</span>`;
+    }
+
+    // Enter 键支持
+    document.getElementById("titleInput").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") gotoByTitleFromInput();
+    });
+  </script>
+
+</body>
+</html>
