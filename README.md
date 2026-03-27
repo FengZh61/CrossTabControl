@@ -21,4 +21,7 @@
 <img width="431" height="263" alt="image" src="https://github.com/user-attachments/assets/58664436-0a24-4213-aca5-28144c6e32c2" />
 
 ## 启动后端服务
-<img width="710" height="58" alt="image" src="https://github.com/user-attachments/assets/41070c6e-658a-4ac0-b417-0cbc7f27eee7" />
+<img width="974" height="108" alt="image" src="https://github.com/user-attachments/assets/d01ff58a-841c-40aa-85b4-620750f34a31" />
+
+## 打开ctrl-tab.html切换页签
+<img width="1123" height="783" alt="image" src="https://github.com/user-attachments/assets/02d70682-7cb6-4bf0-9749-480596db0c58" />
