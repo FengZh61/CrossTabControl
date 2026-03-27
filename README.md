@@ -23,14 +23,19 @@
 ## 打开ctrl-tab.html切换页签
 <img width="1123" height="783" alt="image" src="https://github.com/user-attachments/assets/02d70682-7cb6-4bf0-9749-480596db0c58" />
 
+测试切换页签。
+
+## 禁用插件
+插件可能会部署到多台服务器，在不用远程切换页签的功能时可以把插件禁用掉，以免其他服务器受到影响，或者修改`background.js`中`ws://localhost:3000`的配置，连接一个错误的地址或端口，重新加载插件即可。
+
 # 调试测试
 
 ## 端口配置
-`server.js`中`const wss = new WebSocket.Server({port: 3000});`,3000是服务端口，按需修改。
+`server.js`中`const wss = new WebSocket.Server({port: 3000});`，3000是服务端口，按需修改。
 
-`background.js`中`ws = new WebSocket("ws://localhost:3000");`,3000是服务端口，按需修改。
+`background.js`中`ws = new WebSocket("ws://localhost:3000");`，localhost是server.js运行机器的地址，3000是服务端口，按需修改。
 
-`ctrl-tab.html`中`const ws = new WebSocket("ws://localhost:3000");`,3000是服务端口，按需修改。
+`ctrl-tab.html`中`const ws = new WebSocket("ws://localhost:3000");`，localhost是server.js运行机器的地址，3000是服务端口，按需修改。
 
 3个文件中的端口号需保持一致。
 
