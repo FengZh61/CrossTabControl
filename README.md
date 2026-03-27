@@ -9,7 +9,8 @@
 
 ## 下载项目
 
-## 打开Chrome浏览器的开发者模式，加载未打包的扩展程序，选择项目文件夹
+## 加载扩展程序
+打开Chrome浏览器的开发者模式，加载未打包的扩展程序，选择项目文件夹
 <img width="1907" height="819" alt="image" src="https://github.com/user-attachments/assets/8a08433b-c6d3-4620-a33a-5566f3fd92f0" />
 
 
