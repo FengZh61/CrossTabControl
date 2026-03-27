@@ -1,4 +1,3 @@
-let ws;
 chrome.tabs.query({}, (tabs) => {
     tabs.forEach(tab => {
         console.log("title:", tab.title);
@@ -8,50 +7,113 @@ chrome.tabs.query({}, (tabs) => {
     console.log("所有 tabs:", tabs);
 });
 
+let ws = null;
+let reconnectAttempts = 0;
+const MAX_RECONNECT_ATTEMPTS = 15;
+const HEARTBEAT_INTERVAL = 25000;     // 25秒发送一次 ping
+const KEEPALIVE_INTERVAL = 20000;     // 20秒保活 service worker
+let heartbeatTimer = null;
+let keepaliveTimer = null;
+
 function connect() {
-    ws = new WebSocket("ws://localhost:3000");
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    console.log("WebSocket 已连接，无需重复连接");
+    return;
+  }
 
-    ws.onopen = () => {
-        console.log("✅ WebSocket 已连接到服务器");
-    };
+  console.log(`正在连接 WebSocket... (尝试第 ${reconnectAttempts + 1} 次)`);
+  
+  ws = new WebSocket("ws://localhost:3000");
 
-    ws.onmessage = (event) => {
-        let msg;
-        try {
-            msg = JSON.parse(event.data);
-        } catch (e) {
-            console.error("JSON 解析失败:", e);
-            return;
-        }
+  ws.onopen = () => {
+    console.log("✅ WebSocket 已成功连接到服务器");
+    reconnectAttempts = 0;
+    startHeartbeat();
+    startKeepAlive();
+  };
 
-        console.log("收到消息:", msg);
+  ws.onmessage = (event) => {
+    let msg;
+    try {
+      msg = JSON.parse(event.data);
+    } catch (e) {
+      console.error("JSON 解析失败:", e);
+      return;
+    }
 
-        // === 操作处理 ===
-        if (msg.action === "nextTab") {
-            switchTab(1);
-        }
-        if (msg.action === "prevTab") {
-            switchTab(-1);
-        }
-        if (msg.action === "gotoTab" && msg.index !== undefined) {
-            switchToIndex(msg.index);
-        }
-        if (msg.action === "gotoTabByTitle" && msg.title) {
-            switchToTabByTitle(msg.title);
-        }
-        if (msg.action === "refreshTab") {
-            refreshCurrentTab();
-        }
-    };
+    // 忽略自己的 ping/pong
+    if (msg.action === "ping" || msg.action === "pong") return;
 
-    ws.onclose = () => {
-        console.log("WebSocket 断开，3秒后自动重连...");
-        setTimeout(connect, 3000);
-    };
+    console.log("收到服务器消息:", msg);
 
-    ws.onerror = (error) => {
-        console.error("WebSocket 错误:", error);
-    };
+    if (msg.action === "nextTab") switchTab(1);
+    else if (msg.action === "prevTab") switchTab(-1);
+    else if (msg.action === "gotoTab" && msg.index !== undefined) switchToIndex(msg.index);
+    else if (msg.action === "gotoTabByTitle" && msg.title) switchToTabByTitle(msg.title);
+    else if (msg.action === "refreshTab") refreshCurrentTab();
+  };
+
+  ws.onclose = (event) => {
+    console.log(`❌ WebSocket 断开 (code: ${event.code})`);
+    stopTimers();
+    attemptReconnect();
+  };
+
+  ws.onerror = (error) => {
+    console.error("WebSocket 错误:", error);
+  };
+}
+
+// 指数退避重连
+function attemptReconnect() {
+  if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
+    console.warn("已达到最大重连次数，请检查服务器是否正常运行");
+    return;
+  }
+
+  reconnectAttempts++;
+  // 指数退避 + 随机抖动（防止大量客户端同时重连）
+  const delay = Math.min(1000 * Math.pow(1.8, reconnectAttempts) + Math.random() * 1000, 15000);
+
+  console.log(`将在 ${Math.round(delay/1000)} 秒后进行第 ${reconnectAttempts} 次重连...`);
+  
+  setTimeout(() => {
+    connect();
+  }, delay);
+}
+
+// 应用层心跳
+function startHeartbeat() {
+  if (heartbeatTimer) clearInterval(heartbeatTimer);
+  
+  heartbeatTimer = setInterval(() => {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      try {
+        ws.send(JSON.stringify({ action: "ping" }));
+      } catch (e) {
+        console.warn("发送 ping 失败");
+      }
+    }
+  }, HEARTBEAT_INTERVAL);
+}
+
+// Service Worker 保活（防止 Chrome 杀掉 background）
+function startKeepAlive() {
+  if (keepaliveTimer) clearInterval(keepaliveTimer);
+  
+  keepaliveTimer = setInterval(() => {
+    // 发送一个无关紧要的 Chrome API 调用来重置 service worker 计时器
+    chrome.tabs.query({ active: true, currentWindow: true }, () => {
+      // 什么都不做，只是唤醒
+    });
+  }, KEEPALIVE_INTERVAL);
+}
+
+function stopTimers() {
+  if (heartbeatTimer) clearInterval(heartbeatTimer);
+  if (keepaliveTimer) clearInterval(keepaliveTimer);
+  heartbeatTimer = null;
+  keepaliveTimer = null;
 }
 
 connect();
