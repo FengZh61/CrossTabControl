@@ -20,10 +20,17 @@
 ## 启动后端服务
 <img width="974" height="108" alt="image" src="https://github.com/user-attachments/assets/d01ff58a-841c-40aa-85b4-620750f34a31" />
 
-## 打开ctrl-tab.html切换页签
+## 切换页签
+打开`ctrl-tab.html`进行切换。
 <img width="1123" height="783" alt="image" src="https://github.com/user-attachments/assets/02d70682-7cb6-4bf0-9749-480596db0c58" />
 
 测试切换页签。
+
+## 远程切换
+
+直接打开`ctrl-tab.html`进行切换，只能在本机测试，根据下面的调试测试步骤，修改相应的后端服务地址和端口，在网络联通的情况下进行切换。
+
+如果想用平板操作，可以用httpd或nginx搭建一个http服务，把`ctrl-tab.html`放到http服务器上，用平台远程访问控制页面。
 
 ## 禁用插件
 插件可能会部署到多台服务器，在不用远程切换页签的功能时可以把插件禁用掉，以免其他服务器受到影响，或者修改`background.js`中`ws://localhost:3000`的配置，连接一个错误的地址或端口，重新加载插件即可。
@@ -38,6 +45,9 @@
 `ctrl-tab.html`中`const ws = new WebSocket("ws://localhost:3000");`，localhost是server.js运行机器的地址，3000是服务端口，按需修改。
 
 3个文件中的端口号需保持一致。
+
+## 控制页面修改
+`ctrl-tab.html`是控制网页，样式、功能等可以根据自己的需求进行修改。
 
 ## 注意
 选择加载未打包的扩展程序加载插件，修改项目代码后，刷新插件后，代码生效，同时注意，本地插件项目代码文件夹不要移动位置或修改文件夹名称。
