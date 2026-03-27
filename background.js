@@ -26,7 +26,7 @@ function connect() {
 
         console.log("收到消息:", msg);
 
-        // === 下面这些才是正确的写法 ===
+        // === 操作处理 ===
         if (msg.action === "nextTab") {
             switchTab(1);
         }
