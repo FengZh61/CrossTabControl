@@ -1,3 +1,7 @@
+chrome.runtime.onStartup.addListener(() => {
+    console.log("浏览器启动，service worker 被唤醒");
+    connect();  // 或者调用你初始化 WebSocket 的函数
+});
 chrome.tabs.query({}, (tabs) => {
     tabs.forEach(tab => {
         console.log("title:", tab.title);
