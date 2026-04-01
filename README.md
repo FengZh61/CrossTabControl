@@ -11,7 +11,9 @@
 
 ## 加载扩展程序
 打开Chrome浏览器的开发者模式，加载未打包的扩展程序，选择项目文件夹
-<img width="1907" height="819" alt="image" src="https://github.com/user-attachments/assets/8a08433b-c6d3-4620-a33a-5566f3fd92f0" />
+<img width="1907" height="634" alt="image" src="https://github.com/user-attachments/assets/b41e2b30-3525-42ff-86f2-793522026a56" />
+
+
 
 
 **加载成功**
@@ -59,7 +61,9 @@
 
 # 插件打包
 
-<img width="1287" height="765" alt="image" src="https://github.com/user-attachments/assets/d6ca5153-1752-443e-93a8-26ac9ed89abf" />
+<img width="1897" height="718" alt="image" src="https://github.com/user-attachments/assets/1b1ca47b-982f-44fd-b8e8-daa5c1b77c34" />
+
+
 
 
 打包即可，打包后的插件可以加载到任意一台电脑的Chrome浏览器，不再依赖本地项目文件夹。
